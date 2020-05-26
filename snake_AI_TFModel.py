@@ -116,7 +116,7 @@ def redrawgamewindow():
     global run,m_cnt
     if allow:
         win.fill((0, 0, 0))
-        switch = {"up":0,"right":1,"down":2,"left":3}
+        switch = ["up","right","down","left"]
         bs = random.randrange(100)
         if snk.draw(win):
             test_data.append(curr_data)
@@ -130,8 +130,14 @@ def redrawgamewindow():
             test_data.append(curr_data)
             test_label.append(curr_label)
         else:
+            min_dst = 1000000
+            bst_move = (curr_label+2)%4
+            for mv in [(1,0,1),(-1,0,3),(0,1,2),(0,-1,0)]:
+                if distance(fruit_x,fruit_y,snk.prev_x+mv[0],snk.prev_y+mv[1])<min_dst:
+                    min_dst= distance(fruit_x,fruit_y,snk.prev_x+mv[0],snk.prev_y+mv[1])
+                    bst_move = mv[2]
             test_data.append(curr_data)
-            test_label.append((curr_label+2)%4)
+            test_label.append(bst_move)
         m_cnt+=1
         if m_cnt >= 150:
             run = False
@@ -177,6 +183,7 @@ def game():
                     flg = False
                     for i in range(snk.tail_size):
                         if x==snk.tail_x[i] and y == snk.tail_y[i]:
+                            dst_f*=-1
                             flg = True
                     if flg:
                         break
